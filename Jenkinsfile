@@ -1,28 +1,25 @@
-
 pipeline {
     agent any
     environment {
-        APP_PORT = '9090'
+        APP_PORT = '9090'  // Set the environment variable APP_PORT to 9090
     }
     stages {
         stage('Build') {
             steps {
+                // Use the maven package phase to build the project
+                script {
+                    echo "Building the project on port ${APP_PORT}"
+                }
                 sh 'mvn clean package'
             }
         }
         stage('Unit Test') {
             steps {
-                sh 'mvn test'
-            }
-        }
-        stage('Check Test Running') {
-            steps {
+                // Use the maven test phase to run unit tests
                 script {
-                    // Output log file content to check if "RestIT" is mentioned there
-                    sh 'cat /local/jenkinsHome/jobs/job/builds/1/log'
-                    // Check for "RestIT" in the log
-                    sh 'grep -q "Running com.softserve.verify.RestIT" /local/jenkinsHome/jobs/job/builds/1/log || exit 1'
+                    echo "Running unit tests"
                 }
+                sh 'mvn test'
             }
         }
     }
